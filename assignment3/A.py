@@ -13,14 +13,17 @@ for _ in range(m):
 team = [0] * (n + 1)
 
 def bfs(u):
-  q = deque()
+  q = deque([u])
   team[u] = 1
-  for v in adj[u]:
-    if team[v] == 0:
-      team[v] = 3 - team[u]
-      q.append(v)
-    elif team[v] == team[u]:
-      return False
+  while q:
+    u = q.popleft()
+
+    for v in adj[u]:
+      if team[v] == 0:
+        team[v] = 3 - team[u]
+        q.append(v)
+      elif team[v] == team[u]:
+        return False
 
   return True
 
