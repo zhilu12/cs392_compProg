@@ -3,7 +3,7 @@
 const int N = 1e5; // limit for array size
 int n;             // array size
 int q;
-int t[2 * N];
+int t[4 * N];
 
 void build()
 { // build the tree
@@ -34,12 +34,12 @@ int main()
 {
   scanf("%d %d", &n, &q);
   for (int i = 0; i < n; ++i)
-    scanf("%d", t + n + i);
+    std::scanf("%d", &t[n + i]);
   build();
   for (int i = 0; i < q; ++i)
   {
     int l, r;
-    scanf("%d %d", &l, &r);
+    std::scanf("%d %d", &l, &r);
     int ans = query(l - 1, r);
     printf("%d\n", ans);
   }
