@@ -2,22 +2,27 @@ class TrieNode:
     def __init__(self):
         self.children = [None] * 26
         self.isEndOfWord = False
-        self.numChildren = [0] * 26
+        self.bestCount = 0
+        self.bestWord = None
 
 def getNode():
     pNode = TrieNode()
     pNode.isEndOfWord = False
     return pNode
 
-def insert(root, key):
+def insert(root, key, count):
     pCrawl = root
     for i in range(len(key)):
         index = ord(key[i]) - ord('a')
-        pCrawl.numChildren[index] += 1
         if not pCrawl.children[index]:
             pCrawl.children[index] = getNode()
             
         pCrawl = pCrawl.children[index]
+
+        if (count > pCrawl.bestCount or 
+            (pCrawl.bestWord is None or key < pCrawl.bestWord)):
+            pCrawl.bestWord = key
+            pCrawl.bestCount = count
     pCrawl.isEndOfWord = True
 
 def search(root, key):
@@ -56,25 +61,41 @@ def remove(root, key, depth = 0):
     return root
   
 def searchPref(root, key):
-    res = 0
     pCrawl = root
     for i in range(len(key)):
         index = ord(key[i]) - ord('a')
-        res = pCrawl.numChildren[index]
         if not pCrawl.children[index]:
-            return 0
+            return -1, _
         pCrawl = pCrawl.children[index]
-    return res
+    
+    return pCrawl.bestWord, pCrawl.bestCount
+
+from collections import defaultdict
 
 if __name__ == '__main__':
-    n, q = map(int, input().split())
+    n = int(input())
     root = getNode()
     temp = []
+    words = defaultdict(int)
+
+    # process freq dict
     for _ in range(n):
-        insert(root, str(input()))
-        
+        word = str(input())
+        words[word] += 1
+
+    # add words from dict into trie with counts
+    for (word, count) in words.items():
+        insert(root, word, count)
+
+    # process queries
+    q = int(input())
+
     for _ in range(q):
-      key = str(input())
-      temp.append(searchPref(root, key))
-    for res in temp:
-      print(res)
+        key = str(input())
+        temp.append(searchPref(root, key))
+    for word, count in temp:
+        if word == -1:
+            print(-1)
+        else:
+            print(word, count)
+    

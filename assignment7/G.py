@@ -1,29 +1,27 @@
-def can_divide(nums, k, max_sub_sum):
-    count = 1# count of subarrays
-    current_sum = 0
-    for num in nums:
-        if current_sum + num <= max_sub_sum:
-            current_sum += num
+n, k = map(int, input().split())
+arr = list(map(int, input().split()))
+
+def feasible(arr, mid, k):
+    sub = 1
+    sum = 0
+    for num in arr:
+        if sum + num <= mid:
+            sum += num
         else:
-            count += 1
-            current_sum = num
-            if count >= k: # More subarrays than allowed
+            sub += 1
+            sum = num
+            if sub > k:
                 return False
     return True
 
-def min_max_subarray_sum(nums, k):
-    low = max(nums)
-    high = sum(nums)
+l, r = max(arr), sum(arr)
 
-    while low < high:
-        mid = (low + high) // 2
-        if can_divide(nums, k, mid):
-            high = mid
-        else:
-            low = mid + 1
-    return low
+while l < r:
+    mid = (l + r) // 2
 
-n, k = map(int, input().split())
-nums = list(map(int, input().split()))
+    if feasible(arr, mid, k):
+        r = mid
+    else:
+        l = mid + 1
 
-print(min_max_subarray_sum(nums, k))
+print(l)
